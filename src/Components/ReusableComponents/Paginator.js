@@ -14,6 +14,8 @@ const PAGINATOR = ({ count, jump }) => {
       count={count}
       page={page}
       variant="outlined"
+      shape="rounded"
+      color="primary"
       onChange={handleChange}
       sx={{ margin: "10px auto" }}
     />

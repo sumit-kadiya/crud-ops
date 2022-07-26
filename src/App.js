@@ -5,22 +5,28 @@ import DisplayCard from "./Components/Pages/Card";
 import List from "./Components/Pages/List";
 import NotFound from "./Components/Pages/NotFound";
 
+const urls = [
+  "https://reqres.in/api/users?page=1",
+  "https://reqres.in/api/users?page=2",
+];
+
 function App() {
   const [state, setState] = useState([]);
 
   const fetchDataHandler = useCallback(() => {
-    Promise.all([
-      fetch("https://reqres.in/api/users?page=1").then((value) => value.json()),
-      fetch("https://reqres.in/api/users?page=2").then((value) => value.json()),
-    ])
-      .then((userData) => {
-        let [el1, el2] = userData.map((el) => el.data);
-        setState(el1.concat(el2));
-        // console.log(el1.concat(el2));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    Promise.all(
+      urls.map((url) =>
+        fetch(url)
+          .then((response) => response.json())
+          .catch((error) => console.log("There was a problem!", error))
+      )
+    ).then((userData) => {
+      const data1 = userData[0].data;
+      const data2 = userData[1].data;
+
+      console.log(data1.concat(data2));
+      setState(data1.concat(data2));
+    });
   }, []);
 
   useEffect(() => {

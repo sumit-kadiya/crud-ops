@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Avatar,
@@ -8,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import EditUser from "../EditUser";
-import { useParams, useNavigate } from "react-router-dom";
 import BUTTON from "../ReusableComponents/Button";
 import PropTypes from "prop-types";
 
@@ -53,7 +53,7 @@ const DisplayCard = ({ data, setState }) => {
 
     setTimeout(() => {
       navigate("/");
-    }, 2000);
+    }, 1000);
   };
 
   return (
