@@ -7,6 +7,7 @@ import {
   CardActions,
   CardContent,
   Typography,
+  CardMedia,
 } from "@mui/material";
 import EditUser from "../EditUser";
 import BUTTON from "../ReusableComponents/Button";
@@ -77,12 +78,14 @@ const DisplayCard = ({ data, setState }) => {
           }}
         >
           <Box sx={{ display: "flex", padding: "10px" }}>
-            <Avatar
-              alt="Remy Sharp"
-              src={user.avatar}
-              sx={{ width: 128, height: 128 }}
-              variant="rounded"
-            />
+            <CardMedia>
+              <Avatar
+                alt="Remy Sharp"
+                src={user.avatar}
+                sx={{ width: 128, height: 128 }}
+                variant="rounded"
+              />
+            </CardMedia>
             <CardContent sx={{ textAlign: "left", marginLeft: 2 }}>
               <Typography gutterBottom variant="h4" component="div">
                 {personId}. {user.first_name} {user.last_name}

@@ -22,11 +22,6 @@ const EditUser = ({ user, setOpen, setUser }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     if (data.fname && data.lname && data.email.includes("@")) {
-      //   setError({
-      //     status: true,
-      //     msg: "User Added Successfully",
-      //     type: "success",
-      //   });
       fetch(`https://reqres.in/api/users/${id}`, {
         method: "PUT",
         headers: {
@@ -55,10 +50,6 @@ const EditUser = ({ user, setOpen, setUser }) => {
         setOpen(false);
       }, 2000);
     } else {
-      // setError({ status: true, msg: "All Fields are Required", type: "error" });
-      // setTimeout(() => {
-      //   setError({ status: false });
-      // }, 2000);
       console.log("something went wrong");
     }
   };
@@ -80,11 +71,6 @@ const EditUser = ({ user, setOpen, setUser }) => {
           paddingX: 2,
         }}
       >
-        {/* {error.status && (
-          <Alert variant="filled" severity={error.type} sx={{ mt: 3 }}>
-            {error.msg}
-          </Alert>
-        )} */}
         <INPUT
           label="ID"
           variant="outlined"

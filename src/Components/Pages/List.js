@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Proptypes from "prop-types";
 import {
   Table,
@@ -10,26 +10,28 @@ import {
   Paper,
   Box,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import SearchBar from "../ReusableComponents/SearchBar";
 import usePagination from "../../Hooks/usePagination";
 import PAGINATOR from "../ReusableComponents/Paginator";
 import BUTTON from "../ReusableComponents/Button";
 
-const List = ({ data }) => {
-  const [query, setQuery] = useState("");
+const List = () => {
+  const userData = useSelector((state) => state.data.data);
+  // const [query, setQuery] = useState("");
 
-  const filteredData = data.filter((el) => {
-    if (query === "") {
-      return el;
-    } else if (el.first_name.toLowerCase().includes(query)) {
-      return el;
-    } else {
-      return el.last_name.toLowerCase().includes(query);
-    }
-  });
+  // const filteredData = userData.filter((el) => {
+  //   if (query === "") {
+  //     return el;
+  //   } else if (el.first_name.toLowerCase().includes(query)) {
+  //     return el;
+  //   } else {
+  //     return el.last_name.toLowerCase().includes(query);
+  //   }
+  // });
 
-  const { jump, currentData, count } = usePagination(filteredData);
+  const { jump, currentData, count } = usePagination(userData);
 
   return (
     <Box sx={{ margin: "20px auto", width: "40vw" }}>
@@ -44,7 +46,7 @@ const List = ({ data }) => {
             justifyContent: "space-between",
           }}
         >
-          <SearchBar setQuery={setQuery} />
+          <SearchBar />
           <Link to="/adduser" style={{ textDecoration: "none" }}>
             <BUTTON variant="outlined" sx={{ margin: "20px" }}>
               Add User
