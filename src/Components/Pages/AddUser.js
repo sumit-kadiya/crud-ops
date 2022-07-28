@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Card, Box, Alert } from "@mui/material";
 import INPUT from "../ReusableComponents/Input";
 import BUTTON from "../ReusableComponents/Button";
-import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { sendUserData } from "../../store/actions/data-action";
 
-const AddUser = ({ userData }) => {
+const AddUser = () => {
+  const dispatch = useDispatch();
   const [error, setError] = useState({
     status: false,
     msg: "",
@@ -34,29 +36,8 @@ const AddUser = ({ userData }) => {
         msg: "User Added Successfully",
         type: "success",
       });
-      fetch("https://reqres.in/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Something went wrong");
-        })
-        .then((data) => {
-          console.log(data);
-          userData.push({
-            id: data.id,
-            first_name: data.fname,
-            last_name: data.lname,
-            email: data.email,
-            avatar: "https://statinfer.com/wp-content/uploads/dummy-user.png",
-          });
-        });
+
+      dispatch(sendUserData(data));
 
       setTimeout(() => {
         navigate("/");
@@ -146,14 +127,6 @@ const AddUser = ({ userData }) => {
       </Box>
     </Card>
   );
-};
-
-AddUser.propTypes = {
-  userData: PropTypes.array,
-};
-
-AddUser.defaultProps = {
-  userData: [],
 };
 
 export default AddUser;

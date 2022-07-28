@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   Box,
   Avatar,
@@ -11,9 +12,10 @@ import {
 } from "@mui/material";
 import EditUser from "../EditUser";
 import BUTTON from "../ReusableComponents/Button";
-import PropTypes from "prop-types";
+import { dataActions } from "../../store/reducer/data";
 
-const DisplayCard = ({ data, setState }) => {
+const DisplayCard = () => {
+  const dispatch = useDispatch();
   const [user, setUser] = useState({});
   const [open, setOpen] = useState(false);
   const { personId } = useParams();
@@ -35,22 +37,7 @@ const DisplayCard = ({ data, setState }) => {
   }, [fetchUserHandler]);
 
   const handleDelete = (id) => {
-    fetch(`https://reqres.in/api/users/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log(response);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    setState(data.filter((item) => item.id !== id));
+    dispatch(dataActions.deleteData(id));
 
     setTimeout(() => {
       navigate("/");
@@ -141,16 +128,6 @@ const DisplayCard = ({ data, setState }) => {
       {open && <EditUser user={user} setUser={setUser} setOpen={setOpen} />}
     </Box>
   );
-};
-
-DisplayCard.propTypes = {
-  data: PropTypes.array,
-  setState: PropTypes.func,
-};
-
-DisplayCard.defaultProps = {
-  data: [],
-  setState: () => {},
 };
 
 export default DisplayCard;

@@ -15,12 +15,14 @@ function App() {
     dispatch(fetchUsersData());
   }, [dispatch]);
 
+  console.log(userData);
+
   return (
     <>
       <Routes>
         <Route path="/" element={<List />} />
         <Route path="/:personId" element={<DisplayCard data={userData} />} />
-        <Route path="/adduser" element={<AddUser userData={userData} />} />
+        <Route path="/adduser" element={<AddUser />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
