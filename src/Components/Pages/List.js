@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Proptypes from "prop-types";
 import {
   Table,
@@ -8,18 +8,38 @@ import {
   TableCell,
   TableRow,
   Paper,
+  Pagination,
   Box,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import SearchBar from "../ReusableComponents/SearchBar";
-import usePagination from "../../Hooks/usePagination";
-import PAGINATOR from "../ReusableComponents/Paginator";
 import BUTTON from "../ReusableComponents/Button";
 
-const List = ({ data }) => {
+const List = () => {
+  const [state, setState] = useState([]);
+  let [page, setPage] = useState(1);
+  let [count, setCount] = useState(1);
+
   const [query, setQuery] = useState("");
 
-  const filteredData = data.filter((el) => {
+  useEffect(() => {
+    let perPage = 3;
+    fetch(`https://reqres.in/api/users?page=${page}&per_page=${perPage}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((userData) => {
+        setState(userData.data);
+        console.log(userData.data);
+        setCount(Math.ceil(userData.total / perPage));
+      });
+  }, [page]);
+
+  const handleChange = (e, p) => {
+    setPage(p);
+  };
+
+  const filteredData = state.filter((el) => {
     if (query === "") {
       return el;
     } else if (el.first_name.toLowerCase().includes(query)) {
@@ -28,8 +48,6 @@ const List = ({ data }) => {
       return el.last_name.toLowerCase().includes(query);
     }
   });
-
-  const { jump, currentData, count } = usePagination(filteredData);
 
   return (
     <Box sx={{ margin: "20px auto", width: "40vw" }}>
@@ -65,7 +83,7 @@ const List = ({ data }) => {
           </TableHead>
           {
             <TableBody sx={{ border: 0 }}>
-              {currentData.map((item) => (
+              {filteredData.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell sx={{ fontSize: 18 }}>{item.id}</TableCell>
                   <TableCell sx={{ fontSize: 18 }}>
@@ -89,7 +107,15 @@ const List = ({ data }) => {
           justifyContent: "center",
         }}
       >
-        <PAGINATOR jump={jump} count={count} />
+        <Pagination
+          count={count}
+          page={page}
+          variant="outlined"
+          shape="rounded"
+          color="primary"
+          onChange={handleChange}
+          sx={{ margin: "10px auto" }}
+        />
       </Box>
     </Box>
   );

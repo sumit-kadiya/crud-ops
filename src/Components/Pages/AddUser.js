@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Card, Box, Alert } from "@mui/material";
 import INPUT from "../ReusableComponents/Input";
 import BUTTON from "../ReusableComponents/Button";
-import PropTypes from "prop-types";
 
-const AddUser = ({ userData }) => {
-  const [error, setError] = useState({
+const AddUser = () => {
+  const [alert, setAlert] = useState({
     status: false,
     msg: "",
     type: "",
@@ -28,44 +27,53 @@ const AddUser = ({ userData }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (data.fname && data.lname && data.email.includes("@")) {
-      setError({
-        status: true,
-        msg: "User Added Successfully",
-        type: "success",
-      });
-      fetch("https://reqres.in/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Something went wrong");
-        })
-        .then((data) => {
-          console.log(data);
-          userData.push({
-            id: data.id,
-            first_name: data.fname,
-            last_name: data.lname,
-            email: data.email,
-            avatar: "https://statinfer.com/wp-content/uploads/dummy-user.png",
-          });
-        });
 
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
+    if (data.fname && data.lname && data.email) {
+      if (
+        data.email.match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
+      ) {
+        setAlert({
+          status: true,
+          msg: "User Added Successfully",
+          type: "success",
+        });
+        fetch("https://reqres.in/api/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error("Something went wrong");
+          })
+          .then((data) => {
+            console.log(data);
+          });
+
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        setAlert({
+          status: true,
+          msg: "Please Enter Valid Email",
+          type: "error",
+        });
+        setTimeout(() => {
+          setAlert({ status: false });
+        }, 1000);
+      }
     } else {
-      setError({ status: true, msg: "All Fields are Required", type: "error" });
+      setAlert({ status: true, msg: "All Fields are Required", type: "error" });
       setTimeout(() => {
-        setError({ status: false });
-      }, 2000);
+        setAlert({ status: false });
+      }, 1000);
     }
   };
   return (
@@ -86,9 +94,9 @@ const AddUser = ({ userData }) => {
           paddingX: 2,
         }}
       >
-        {error.status && (
-          <Alert variant="filled" severity={error.type} sx={{ mt: 3 }}>
-            {error.msg}
+        {alert.status && (
+          <Alert variant="filled" severity={alert.type} sx={{ mt: 3 }}>
+            {alert.msg}
           </Alert>
         )}
         <INPUT
@@ -146,14 +154,6 @@ const AddUser = ({ userData }) => {
       </Box>
     </Card>
   );
-};
-
-AddUser.propTypes = {
-  userData: PropTypes.array,
-};
-
-AddUser.defaultProps = {
-  userData: [],
 };
 
 export default AddUser;

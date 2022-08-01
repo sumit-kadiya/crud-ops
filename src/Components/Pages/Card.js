@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -10,15 +10,14 @@ import {
 } from "@mui/material";
 import EditUser from "../EditUser";
 import BUTTON from "../ReusableComponents/Button";
-import PropTypes from "prop-types";
 
-const DisplayCard = ({ data, setState }) => {
+const DisplayCard = () => {
   const [user, setUser] = useState({});
   const [open, setOpen] = useState(false);
   const { personId } = useParams();
   const navigate = useNavigate();
 
-  const fetchUserHandler = useCallback(() => {
+  useEffect(() => {
     fetch(`https://reqres.in/api/users/${personId}`)
       .then((response) => {
         return response.json();
@@ -28,10 +27,6 @@ const DisplayCard = ({ data, setState }) => {
         // console.log(userData.data);
       });
   }, [personId]);
-
-  useEffect(() => {
-    fetchUserHandler();
-  }, [fetchUserHandler]);
 
   const handleDelete = (id) => {
     fetch(`https://reqres.in/api/users/${id}`, {
@@ -48,8 +43,6 @@ const DisplayCard = ({ data, setState }) => {
       .catch((error) => {
         console.error(error);
       });
-
-    setState(data.filter((item) => item.id !== id));
 
     setTimeout(() => {
       navigate("/");
@@ -135,19 +128,9 @@ const DisplayCard = ({ data, setState }) => {
           Back
         </BUTTON>
       </Box>
-      {open && <EditUser user={user} setUser={setUser} setOpen={setOpen} />}
+      {open && <EditUser user={user} setOpen={setOpen} />}
     </Box>
   );
-};
-
-DisplayCard.propTypes = {
-  data: PropTypes.array,
-  setState: PropTypes.func,
-};
-
-DisplayCard.defaultProps = {
-  data: [],
-  setState: () => {},
 };
 
 export default DisplayCard;
