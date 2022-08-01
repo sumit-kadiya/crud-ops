@@ -1,5 +1,4 @@
-import React from "react";
-import Proptypes from "prop-types";
+import React, { useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -10,15 +9,21 @@ import {
   Paper,
   Box,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchUsersData } from "../../store/actions/data-action";
 import SearchBar from "../ReusableComponents/SearchBar";
 import usePagination from "../../Hooks/usePagination";
 import PAGINATOR from "../ReusableComponents/Paginator";
 import BUTTON from "../ReusableComponents/Button";
 
 const List = () => {
+  const dispatch = useDispatch();
   const userData = useSelector((state) => state.data.data);
+
+  useEffect(() => {
+    dispatch(fetchUsersData());
+  }, [dispatch]);
   // const [query, setQuery] = useState("");
 
   // const filteredData = userData.filter((el) => {
@@ -97,11 +102,4 @@ const List = () => {
   );
 };
 
-List.proptypes = {
-  data: Proptypes.array,
-};
-
-List.defaultProps = {
-  data: [],
-};
 export default List;
